@@ -1,0 +1,6 @@
+@FondoUnicoAPI_HostAddress = http://localhost:5010
+
+GET {{FondoUnicoAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
