@@ -284,3 +284,4 @@ C:\Users\gonza\Documents\Fondo Único Sistema\FondoUnicoAPI\FondoUnicoAPI\bin\De
 C:\Users\gonza\Documents\Fondo Único Sistema\FondoUnicoAPI\FondoUnicoAPI\bin\Debug\net8.0\runtimes\win\lib\net7.0\System.Windows.Extensions.dll
 C:\Users\gonza\Documents\Fondo Único Sistema\FondoUnicoAPI\FondoUnicoAPI\obj\Debug\net8.0\FondoUnicoAPI.RazorAssemblyInfo.cache
 C:\Users\gonza\Documents\Fondo Único Sistema\FondoUnicoAPI\FondoUnicoAPI\obj\Debug\net8.0\FondoUnicoAPI.RazorAssemblyInfo.cs
+C:\Users\gonza\Documents\Fondo Único Sistema\FondoUnicoAPI\FondoUnicoAPI\obj\Debug\net8.0\FondoUnicoAPI.sourcelink.json

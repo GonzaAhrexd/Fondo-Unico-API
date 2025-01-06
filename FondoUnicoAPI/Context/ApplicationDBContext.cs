@@ -21,6 +21,8 @@ public class ApplicationDBContext : DbContext
 
         public DbSet<RenglonesEntrega> RenglonesEntregas { get; set; }
         public DbSet<Entregas> Entregas { get; set; }
+ 
+public DbSet<FondoUnicoAPI.Models.Unidades> Unidades { get; set; } = default!;
 
        
 

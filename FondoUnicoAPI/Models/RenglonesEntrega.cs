@@ -3,7 +3,6 @@
     public class RenglonesEntrega
     {
         public int Id { get; set; }
-        public int NroEntregaFK { get; set; }
         public int NroRenglon { get; set; }
         public String TipoFormulario { get; set; }
         public int desde { get; set; }
