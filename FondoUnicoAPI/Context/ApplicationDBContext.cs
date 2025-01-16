@@ -25,6 +25,8 @@ public class ApplicationDBContext : DbContext
 public DbSet<FondoUnicoAPI.Models.Unidades> Unidades { get; set; } = default!;
  
 public DbSet<FondoUnicoAPI.Models.Deposito> Deposito { get; set; } = default!;
+ 
+public DbSet<FondoUnicoAPI.Models.Verificacion> Verificacion { get; set; } = default!;
 
        
 
