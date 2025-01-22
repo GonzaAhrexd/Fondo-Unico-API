@@ -4,6 +4,7 @@ using FondoUnicoAPI.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FondoUnicoAPI.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250121124836_VerificacionAvance")]
+    partial class VerificacionAvance
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -202,13 +205,13 @@ namespace FondoUnicoAPI.Migrations
                     b.ToTable("Valores");
                 });
 
-            modelBuilder.Entity("FondoUnicoAPI.Models.Verificaciones", b =>
+            modelBuilder.Entity("FondoUnicoAPI.Models.Verificacion", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("Recibo")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Recibo"));
 
                     b.Property<string>("Anio")
                         .IsRequired()
@@ -218,9 +221,8 @@ namespace FondoUnicoAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Fecha")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime>("Fecha")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Formulario")
                         .IsRequired()
@@ -241,9 +243,6 @@ namespace FondoUnicoAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Recibo")
-                        .HasColumnType("int");
-
                     b.Property<string>("Responsable")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -256,9 +255,9 @@ namespace FondoUnicoAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                    b.HasKey("Recibo");
 
-                    b.ToTable("Verificaciones");
+                    b.ToTable("Verificacion");
                 });
 
             modelBuilder.Entity("FondoUnicoAPI.Models.RenglonesEntrega", b =>

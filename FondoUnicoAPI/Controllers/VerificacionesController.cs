@@ -12,47 +12,47 @@ namespace FondoUnicoAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class VerificacionsController : ControllerBase
+    public class VerificacionesController : ControllerBase
     {
         private readonly ApplicationDBContext _context;
 
-        public VerificacionsController(ApplicationDBContext context)
+        public VerificacionesController(ApplicationDBContext context)
         {
             _context = context;
         }
 
-        // GET: api/Verificacions
+        // GET: api/Verificaciones
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Verificacion>>> GetVerificacion()
+        public async Task<ActionResult<IEnumerable<Verificaciones>>> GetVerificaciones()
         {
-            return await _context.Verificacion.ToListAsync();
+            return await _context.Verificaciones.ToListAsync();
         }
 
-        // GET: api/Verificacions/5
+        // GET: api/Verificaciones/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Verificacion>> GetVerificacion(int id)
+        public async Task<ActionResult<Verificaciones>> GetVerificaciones(int id)
         {
-            var verificacion = await _context.Verificacion.FindAsync(id);
+            var verificaciones = await _context.Verificaciones.FindAsync(id);
 
-            if (verificacion == null)
+            if (verificaciones == null)
             {
                 return NotFound();
             }
 
-            return verificacion;
+            return verificaciones;
         }
 
-        // PUT: api/Verificacions/5
+        // PUT: api/Verificaciones/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutVerificacion(int id, Verificacion verificacion)
+        public async Task<IActionResult> PutVerificaciones(int id, Verificaciones verificaciones)
         {
-            if (id != verificacion.Recibo)
+            if (id != verificaciones.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(verificacion).State = EntityState.Modified;
+            _context.Entry(verificaciones).State = EntityState.Modified;
 
             try
             {
@@ -60,7 +60,7 @@ namespace FondoUnicoAPI.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!VerificacionExists(id))
+                if (!VerificacionesExists(id))
                 {
                     return NotFound();
                 }
@@ -73,36 +73,36 @@ namespace FondoUnicoAPI.Controllers
             return NoContent();
         }
 
-        // POST: api/Verificacions
+        // POST: api/Verificaciones
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Verificacion>> PostVerificacion(Verificacion verificacion)
+        public async Task<ActionResult<Verificaciones>> PostVerificaciones(Verificaciones verificaciones)
         {
-            _context.Verificacion.Add(verificacion);
+            _context.Verificaciones.Add(verificaciones);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetVerificacion", new { id = verificacion.Recibo }, verificacion);
+            return CreatedAtAction("GetVerificaciones", new { id = verificaciones.Id }, verificaciones);
         }
 
-        // DELETE: api/Verificacions/5
+        // DELETE: api/Verificaciones/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteVerificacion(int id)
+        public async Task<IActionResult> DeleteVerificaciones(int id)
         {
-            var verificacion = await _context.Verificacion.FindAsync(id);
-            if (verificacion == null)
+            var verificaciones = await _context.Verificaciones.FindAsync(id);
+            if (verificaciones == null)
             {
                 return NotFound();
             }
 
-            _context.Verificacion.Remove(verificacion);
+            _context.Verificaciones.Remove(verificaciones);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool VerificacionExists(int id)
+        private bool VerificacionesExists(int id)
         {
-            return _context.Verificacion.Any(e => e.Recibo == id);
+            return _context.Verificaciones.Any(e => e.Id == id);
         }
     }
 }

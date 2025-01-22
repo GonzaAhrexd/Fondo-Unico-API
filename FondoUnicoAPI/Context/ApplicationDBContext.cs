@@ -22,13 +22,11 @@ public class ApplicationDBContext : DbContext
         public DbSet<RenglonesEntrega> RenglonesEntregas { get; set; }
         public DbSet<Entregas> Entregas { get; set; }
  
-public DbSet<FondoUnicoAPI.Models.Unidades> Unidades { get; set; } = default!;
+        public DbSet<FondoUnicoAPI.Models.Unidades> Unidades { get; set; } = default!;
  
-public DbSet<FondoUnicoAPI.Models.Deposito> Deposito { get; set; } = default!;
+        public DbSet<FondoUnicoAPI.Models.Deposito> Deposito { get; set; } = default!;
  
-public DbSet<FondoUnicoAPI.Models.Verificacion> Verificacion { get; set; } = default!;
-
-       
+        public DbSet<FondoUnicoAPI.Models.Verificaciones> Verificaciones { get; set; } = default!;
 
 
 

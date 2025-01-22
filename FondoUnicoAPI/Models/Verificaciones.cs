@@ -1,13 +1,15 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace FondoUnicoAPI.Models
 {
-    public class Verificacion
+    public class Verificaciones
     {
+
         [Key]
+        public int Id { get; set; }
+        public string Unidad { get; set; }
         public int Recibo { get; set; }
-        public DateTime Fecha { get; set; }
+        public string Fecha { get; set; }
         public string PlantaVerificadora { get; set; }
         public string Tipo { get; set; }
         public string Responsable { get; set; }
@@ -16,7 +18,8 @@ namespace FondoUnicoAPI.Models
         public string Modelo { get; set; }
         public string Anio { get; set; }
         public string Dominio { get; set; }
-        public string Importe { get; set; }
+        public double Importe { get; set; }
+
 
     }
 }

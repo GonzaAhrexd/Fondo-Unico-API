@@ -1,11 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "dP2xPTjXr4mbgpoblx92QeHBwYTGDGkY7D/j9wc3vW73x7Acdjxv3mHG3XTfquC0ylz2ewDmYrlyt0kdlGpDNg==",
+  "dgSpecHash": "chmPrYz46VXeMeIIG77j3uucySWnRQTcrg5sQtjXQH9FoYs7ichSTGn59wtVKMnUMoS/3xrUbtn7Y9HPS65QZQ==",
   "success": true,
   "projectFilePath": "C:\\Users\\gonza\\Documents\\Fondo Único Sistema\\FondoUnicoAPI\\FondoUnicoAPI\\FondoUnicoAPI.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\gonza\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",
     "C:\\Users\\gonza\\.nuget\\packages\\azure.identity\\1.11.4\\azure.identity.1.11.4.nupkg.sha512",
+    "C:\\Users\\gonza\\.nuget\\packages\\dotenv.net\\3.2.1\\dotenv.net.3.2.1.nupkg.sha512",
     "C:\\Users\\gonza\\.nuget\\packages\\humanizer\\2.14.1\\humanizer.2.14.1.nupkg.sha512",
     "C:\\Users\\gonza\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\gonza\\.nuget\\packages\\humanizer.core.af\\2.14.1\\humanizer.core.af.2.14.1.nupkg.sha512",

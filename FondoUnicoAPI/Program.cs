@@ -1,5 +1,6 @@
 using FondoUnicoAPI.Context;
 using Microsoft.EntityFrameworkCore;
+using dotenv.net;
 
 namespace FondoUnicoAPI
 {
@@ -7,6 +8,8 @@ namespace FondoUnicoAPI
     {
         public static void Main(string[] args)
         {
+            DotEnv.Load();
+            
             var builder = WebApplication.CreateBuilder(args);
             string cors = "http://localhost:4200";
 
@@ -16,6 +19,7 @@ namespace FondoUnicoAPI
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.Services.AddHttpClient();
 
             // Agregar los servicios a tu contenedor
             builder.Services.AddDbContext<ApplicationDBContext>(options =>
