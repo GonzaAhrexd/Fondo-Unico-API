@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FondoUnicoAPI.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Any;
 using Newtonsoft.Json;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -30,6 +33,8 @@ public class VehiclesController : ControllerBase
             // Si es necesario, puedes procesar la respuesta, por ejemplo, eliminar el "callback" para obtener un JSON válido
             // Asumiendo que la respuesta es un JSON, se eliminaría el "callback=?"
             string jsonResponse = response.Substring(response.IndexOf('(') + 1, response.LastIndexOf(')') - response.IndexOf('(') - 1);
+
+
 
             // Retorna los datos como JSON
             return Ok(jsonResponse);
@@ -65,6 +70,8 @@ public class VehiclesController : ControllerBase
         }
     }
 
+    // Trae los datos https://www.carqueryapi.com/api/0.3/?callback=?&cmd=getMakes&year=2022 y pasalos a la BD en la tabla MarcasAutos
+   
 
     [HttpGet("motorcycles")]
     public async Task<IActionResult> GetMotorcycles()

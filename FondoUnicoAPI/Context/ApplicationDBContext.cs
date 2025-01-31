@@ -27,8 +27,13 @@ public class ApplicationDBContext : DbContext
         public DbSet<FondoUnicoAPI.Models.Deposito> Deposito { get; set; } = default!;
  
         public DbSet<FondoUnicoAPI.Models.Verificaciones> Verificaciones { get; set; } = default!;
+ 
+        public DbSet<FondoUnicoAPI.Models.MarcasMotos> Marcas { get; set; } = default!;
 
+        public DbSet<FondoUnicoAPI.Models.ModelosMotos> Modelos { get; set; } = default!;
 
+        public DbSet<FondoUnicoAPI.Models.MarcasAutos> MarcasAutos { get; set; } = default!;
+        public DbSet<FondoUnicoAPI.Models.ModelosAutos> ModelosAutos { get; set; } = default!;
 
     }
 }

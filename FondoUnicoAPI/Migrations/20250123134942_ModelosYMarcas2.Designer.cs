@@ -4,6 +4,7 @@ using FondoUnicoAPI.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FondoUnicoAPI.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250123134942_ModelosYMarcas2")]
+    partial class ModelosYMarcas2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -111,7 +114,7 @@ namespace FondoUnicoAPI.Migrations
                     b.ToTable("Formularios");
                 });
 
-            modelBuilder.Entity("FondoUnicoAPI.Models.MarcasAutos", b =>
+            modelBuilder.Entity("FondoUnicoAPI.Models.Marcas", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -123,20 +126,7 @@ namespace FondoUnicoAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
-
-                    b.ToTable("MarcasAutos");
-                });
-
-            modelBuilder.Entity("FondoUnicoAPI.Models.MarcasMotos", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Marca")
+                    b.Property<string>("Tipo")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -145,7 +135,7 @@ namespace FondoUnicoAPI.Migrations
                     b.ToTable("Marcas");
                 });
 
-            modelBuilder.Entity("FondoUnicoAPI.Models.ModelosAutos", b =>
+            modelBuilder.Entity("FondoUnicoAPI.Models.Modelos", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -153,28 +143,9 @@ namespace FondoUnicoAPI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("MarcaID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Modelo")
+                    b.Property<string>("MarcaID")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ModelosAutos");
-                });
-
-            modelBuilder.Entity("FondoUnicoAPI.Models.ModelosMotos", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("MarcaID")
-                        .HasColumnType("int");
 
                     b.Property<string>("Modelo")
                         .IsRequired()
