@@ -75,12 +75,20 @@ namespace FondoUnicoAPI.Controllers
 
         // POST: api/ModelosAutos
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<ModelosAutos>> PostModelosAutos(ModelosAutos modelosAutos)
+        [HttpPost("{Marca}")]
+        public async Task<ActionResult<ModelosAutos>> PostModelosAutos(string Marca, ModelosAutos modelosAutos)
         {
+            // Obten el ID de Marca
+
+            var marca = _context.MarcasAutos.Where(x => x.Marca == Marca).FirstOrDefault();
+            int idMarca = marca.Id;
+
+            // Ahora arma un objeto para enviar el Modelo en el body (modelosAutos) y el ID de idMarca
+
+            modelosAutos.MarcaID = idMarca;
+
             _context.ModelosAutos.Add(modelosAutos);
             await _context.SaveChangesAsync();
-
             return CreatedAtAction("GetModelosAutos", new { id = modelosAutos.Id }, modelosAutos);
         }
 
