@@ -17,8 +17,6 @@ public class ApplicationDBContext : DbContext
         public DbSet<Bancos> Bancos { get; set; }
         public DbSet<Formularios> Formularios { get; set; }
         public DbSet<Tipos> Tipos { get; set; }
-        public DbSet<Valores> Valores { get; set; }
-
         public DbSet<RenglonesEntrega> RenglonesEntregas { get; set; }
         public DbSet<Entregas> Entregas { get; set; }
  
