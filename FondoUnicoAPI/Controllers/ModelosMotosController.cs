@@ -83,6 +83,26 @@ namespace FondoUnicoAPI.Controllers
 
             return CreatedAtAction("GetModelosMotos", new { id = modelosMotos.Id }, modelosMotos);
         }
+        [HttpPost("{Marca}")]
+
+        public async Task<ActionResult<ModelosMotos>> PostModelosMotos(string Marca, ModelosMotos modelosMotos)
+        {
+            // Obten el ID de Marca
+
+            var marca = _context.Marcas.Where(x => x.Marca == Marca).FirstOrDefault();
+            int idMarca = marca.Id;
+
+
+            // Ahora arma un objeto para enviar el Modelo en el body (modelosAutos) y el ID de idMarca
+
+            modelosMotos.MarcaID = idMarca; 
+    
+            _context.Modelos.Add( modelosMotos);
+            await _context.SaveChangesAsync();
+            return CreatedAtAction("GetModelosMotos", new { id = modelosMotos.Id }, modelosMotos);
+        }
+
+
 
         // DELETE: api/ModelosMotos/5
         [HttpDelete("{id}")]

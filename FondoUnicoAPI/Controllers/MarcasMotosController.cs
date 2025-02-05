@@ -25,7 +25,15 @@ namespace FondoUnicoAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<MarcasMotos>>> GetMarcas()
         {
-            return await _context.Marcas.ToListAsync();
+            var Marcas = await _context.Marcas.ToListAsync();
+
+            // Ordena alfabeticamente
+
+            Marcas = Marcas.OrderBy(x => x.Marca).ToList();
+
+            return Marcas;
+
+
         }
 
         // GET: api/MarcasMotos/5
@@ -45,7 +53,11 @@ namespace FondoUnicoAPI.Controllers
         public async Task<ActionResult<IEnumerable<ModelosMotos>>> GetModelosAutos(string marca)
         {
             var marcaId = _context.Marcas.Where(m => m.Marca == marca).FirstOrDefault().Id;
+
+
             var modelosAutos = await _context.Modelos.Where(m => m.MarcaID == marcaId).ToListAsync();
+            modelosAutos = modelosAutos.OrderBy(x => x.Modelo).ToList();
+
 
             if(modelosAutos == null)
             {
