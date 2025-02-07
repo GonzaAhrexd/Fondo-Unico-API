@@ -28,9 +28,16 @@ namespace FondoUnicoAPI.Controllers
             return await _context.Deposito.ToListAsync();
         }
 
+       
+
         [HttpGet("{unidad}/{fechaInicio}/{fechaFinal}")]
         public async Task<ActionResult<IEnumerable<Deposito>>> GetDepositosPorUnidadFecha(string unidad, DateTime fechaInicio, DateTime fechaFinal)
         {
+            if(unidad == "Listar todo")
+            {
+                // Retorna un arreglo con los depositos que cumplan con la fecha de inicio y final
+                return await _context.Deposito.Where(e => e.Fecha >= fechaInicio && e.Fecha <= fechaFinal).ToListAsync();
+            }
             // Retorna un arreglo con los depositos que cumplan con la unidad y la fecha de inicio y final
             return await _context.Deposito.Where(e => e.Unidad == unidad && e.Fecha >= fechaInicio && e.Fecha <= fechaFinal).ToListAsync();
         

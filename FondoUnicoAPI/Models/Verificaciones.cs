@@ -9,7 +9,7 @@ namespace FondoUnicoAPI.Models
         public int Id { get; set; }
         public string Unidad { get; set; }
         public int Recibo { get; set; }
-        public string Fecha { get; set; }
+        public DateTime Fecha { get; set; }
         public string PlantaVerificadora { get; set; }
         public string Tipo { get; set; }
         public string Responsable { get; set; }

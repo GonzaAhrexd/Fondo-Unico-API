@@ -48,6 +48,12 @@ namespace FondoUnicoAPI.Controllers
         [HttpGet("{unidad}/{fechaInicio}/{fechaFinal}")]
         public async Task<ActionResult<IEnumerable<Entregas>>> GetEntregasPorUnidadFecha(string unidad, DateTime fechaInicio, DateTime fechaFinal)
         {
+            // Si Unidad es Listar Todo, no filtrar por Unidad
+            if(unidad == "Listar todo")
+            {
+                return await _context.Entregas.Include(e => e.RenglonesEntregas).Where(e => e.Fecha >= fechaInicio && e.Fecha <= fechaFinal).ToListAsync();
+            }
+
             return await _context.Entregas.Include(e => e.RenglonesEntregas).Where(e => e.Unidad == unidad && e.Fecha >= fechaInicio && e.Fecha <= fechaFinal).ToListAsync();
         }
 

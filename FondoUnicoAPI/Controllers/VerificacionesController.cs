@@ -30,7 +30,7 @@ namespace FondoUnicoAPI.Controllers
 
         // Haz un get por Unidad y Fecha 
         [HttpGet("{unidad}/{fecha}")]
-        public async Task<IActionResult> Get(string unidad, string fecha)
+        public async Task<IActionResult> Get(string unidad, DateTime fecha)
         {
             var verificaciones = await _context.Verificaciones
                                                .Where(x => x.Unidad == unidad && x.Fecha == fecha)
@@ -43,6 +43,22 @@ namespace FondoUnicoAPI.Controllers
 
             return Ok(verificaciones); // Devuelve un 200 OK con los resultados
         }
+
+        [HttpGet("{unidad}/{desde}/{hasta}")]
+        public async Task<IActionResult> Get(string unidad, DateTime desde, DateTime hasta)
+        {
+            var verificaciones = await _context.Verificaciones
+                                               .Where(x => x.Unidad == unidad && x.Fecha >= desde && x.Fecha <= hasta)
+                                               .ToListAsync();
+
+            if(verificaciones == null || !verificaciones.Any())
+            {
+                return NotFound(); // Devuelve un 404 si no se encuentra ninguna verificación
+            }
+
+            return Ok(verificaciones); // Devuelve un 200 OK con los resultados
+        }
+
 
 
         // GET: api/Verificaciones/5
