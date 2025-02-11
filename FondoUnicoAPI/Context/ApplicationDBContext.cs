@@ -32,6 +32,8 @@ public class ApplicationDBContext : DbContext
 
         public DbSet<FondoUnicoAPI.Models.MarcasAutos> MarcasAutos { get; set; } = default!;
         public DbSet<FondoUnicoAPI.Models.ModelosAutos> ModelosAutos { get; set; } = default!;
+ 
+        public DbSet<FondoUnicoAPI.Models.Usuario> Usuario { get; set; } = default!;
 
     }
 }

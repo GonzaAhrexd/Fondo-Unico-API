@@ -288,3 +288,6 @@ C:\Users\gonza\Documents\Fondo Único Sistema\FondoUnicoAPI\FondoUnicoAPI\obj\De
 C:\Users\gonza\Documents\Fondo Único Sistema\FondoUnicoAPI\FondoUnicoAPI\bin\Debug\net8.0\dotenv.net.dll
 C:\Users\gonza\Documents\Fondo Único Sistema\FondoUnicoAPI\FondoUnicoAPI\bin\Debug\net8.0\moto_brands.json
 C:\Users\gonza\Documents\Fondo Único Sistema\FondoUnicoAPI\FondoUnicoAPI\bin\Debug\net8.0\moto_models.json
+C:\Users\gonza\Documents\Fondo Único Sistema\FondoUnicoAPI\FondoUnicoAPI\bin\Debug\net8.0\Microsoft.Bcl.Memory.dll
+C:\Users\gonza\Documents\Fondo Único Sistema\FondoUnicoAPI\FondoUnicoAPI\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\gonza\Documents\Fondo Único Sistema\FondoUnicoAPI\FondoUnicoAPI\bin\Debug\net8.0\Microsoft.Extensions.ObjectPool.dll

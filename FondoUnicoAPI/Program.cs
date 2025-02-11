@@ -1,6 +1,12 @@
 using FondoUnicoAPI.Context;
 using Microsoft.EntityFrameworkCore;
+
 using dotenv.net;
+using FondoUnicoAPI.Models;
+using System.Text;
+using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
+
 
 namespace FondoUnicoAPI
 {
@@ -16,10 +22,32 @@ namespace FondoUnicoAPI
             // Add services to the container.
 
             builder.Services.AddControllers();
+
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddHttpClient();
+
+            // Toma SECRET_TOKEN_KEY desde el .env
+            var secretKey = Environment.GetEnvironmentVariable("SECRET_TOKEN_KEY");
+
+            builder.Services.AddAuthorization();
+            builder.Services.AddAuthentication("Bearer").AddJwtBearer(opt =>
+            {
+                var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
+
+                var signingCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256Signature);
+                
+                opt.RequireHttpsMetadata = false;
+
+                opt.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateAudience = false,
+                    ValidateIssuer = false,
+                    IssuerSigningKey = signingKey
+                };
+                
+            });
 
             // Agregar los servicios a tu contenedor
             builder.Services.AddDbContext<ApplicationDBContext>(options =>
@@ -36,6 +64,9 @@ namespace FondoUnicoAPI
 
             var app = builder.Build();
 
+            app.MapGet("/protected", (ClaimsPrincipal user) => "Hello World!" + user.Identity?.Name).RequireAuthorization(p => p.RequireRole("string"));
+
+
             // Configure the HTTP request pipeline.
             if(app.Environment.IsDevelopment())
             {
@@ -46,6 +77,9 @@ namespace FondoUnicoAPI
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
+
+
+ 
 
             app.UseCors(cors);
 
