@@ -15,6 +15,8 @@ using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
 
 
 namespace FondoUnicoAPI.Controllers
@@ -194,10 +196,29 @@ namespace FondoUnicoAPI.Controllers
                 {
                     HttpOnly = true,       // Hace que el token no sea accesible desde JavaScript
                     Secure = false,         // Asegura la cookie en conexiones HTTPS
-                    SameSite = SameSiteMode.Strict, // Previene que la cookie sea enviada en solicitudes cross-site
+                    SameSite = SameSiteMode.Lax, // Previene que la cookie sea enviada en solicitudes cross-site
                     Expires = DateTime.UtcNow.AddHours(24) // Configura el tiempo de expiración
                 });
 
+                var claims = new List<Claim>
+        {
+            new Claim(ClaimTypes.Name, usuario.Nombre),
+            new Claim(ClaimTypes.Role, usuario.Rol),
+            new Claim(ClaimTypes.NameIdentifier, usuario.Id.ToString())
+        };
+
+                var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+
+                // Autenticar al usuario usando cookies
+                await HttpContext.SignInAsync(
+                    CookieAuthenticationDefaults.AuthenticationScheme,
+                    claimsPrincipal,
+                    new AuthenticationProperties
+                    {
+                        IsPersistent = true,
+                        ExpiresUtc = DateTimeOffset.UtcNow.AddHours(24)
+                    });
 
                 return Ok(tokenString);
 
@@ -212,13 +233,23 @@ namespace FondoUnicoAPI.Controllers
             }
         }
 
-        [HttpGet("protected")]
+        [HttpPost("protected")]
         [Authorize]
         public IActionResult Protected(ClaimsPrincipal user)
         {
             // Aquí puedes acceder a la información del usuario autenticado
-            return Ok($"Hola");
+            string cookieValue = HttpContext.Request.Cookies["AuthToken"];
+
+            if(cookieValue != null)
+            {
+                return Ok($"El valor de la cookie AuthToken es: {cookieValue}");
+            }
+            else
+            {
+                return Ok("La cookie AuthToken no está presente o es nula.");
+            }
         }
+    
 
 
         public class LoginRequest
