@@ -6,7 +6,6 @@ using FondoUnicoAPI.Models;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
-using Microsoft.AspNetCore.Authentication.Cookies;
 
 
 namespace FondoUnicoAPI
@@ -32,23 +31,23 @@ namespace FondoUnicoAPI
             // Toma SECRET_TOKEN_KEY desde el .env
             var secretKey = Environment.GetEnvironmentVariable("SECRET_TOKEN_KEY");
 
-            builder.Services.AddAuthentication(options =>
-            {
-                // Configura la autenticación de cookies por defecto
-                options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-            }).AddCookie(options =>
-            {
-                options.LoginPath = "/api/Usuarios/login"; // Ruta donde se redirige si no está autenticado
-                options.Cookie.Name = "AuthToken"; // Nombre de la cookie que estás usando
-            });
-            
-
-
             builder.Services.AddAuthorization();
+            builder.Services.AddAuthentication("Bearer").AddJwtBearer(opt =>
+            {
+                var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
 
+                var signingCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256Signature);
+                
+                opt.RequireHttpsMetadata = false;
+
+                opt.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateAudience = false,
+                    ValidateIssuer = false,
+                    IssuerSigningKey = signingKey
+                };
+                
+            });
 
             // Agregar los servicios a tu contenedor
             builder.Services.AddDbContext<ApplicationDBContext>(options =>
@@ -65,6 +64,9 @@ namespace FondoUnicoAPI
 
             var app = builder.Build();
 
+            app.MapGet("/protected", (ClaimsPrincipal user) => "Hello World!" + user.Identity?.Name).RequireAuthorization(p => p.RequireRole("string"));
+
+
             // Configure the HTTP request pipeline.
             if(app.Environment.IsDevelopment())
             {
@@ -74,7 +76,6 @@ namespace FondoUnicoAPI
 
             app.UseHttpsRedirection();
 
-            app.UseAuthentication();
             app.UseAuthorization();
 
 
