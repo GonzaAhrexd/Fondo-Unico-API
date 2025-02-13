@@ -34,6 +34,7 @@ namespace FondoUnicoAPI.Controllers
 
         // Haz una ruta /registrar-usuario 
         [HttpPost("registrar-usuario")]
+        [Authorize]
         public async Task<IActionResult> AltaUsuario([FromBody] UsuarioRequest request){
             // Obtener del archivo .env POLICIA_DIGITAL_URL
             var urlPoliciaDigital = Environment.GetEnvironmentVariable("POLICIA_DIGITAL_URL");
@@ -183,6 +184,7 @@ namespace FondoUnicoAPI.Controllers
                         new Claim(ClaimTypes.NameIdentifier, usuario.Id.ToString())
                         //  new Claim(ClaimTypes.)
                     }),
+                
                     Expires = DateTime.UtcNow.AddHours(24),
                     SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(byteKey), SecurityAlgorithms.HmacSha256Signature)
                 };
@@ -194,33 +196,17 @@ namespace FondoUnicoAPI.Controllers
 
                 Response.Cookies.Append("AuthToken", tokenString, new CookieOptions
                 {
-                    HttpOnly = true,       // Hace que el token no sea accesible desde JavaScript
+                    HttpOnly = false,       // Hace que el token no sea accesible desde JavaScript
                     Secure = false,         // Asegura la cookie en conexiones HTTPS
                     SameSite = SameSiteMode.Lax, // Previene que la cookie sea enviada en solicitudes cross-site
                     Expires = DateTime.UtcNow.AddHours(24) // Configura el tiempo de expiración
                 });
 
-                var claims = new List<Claim>
-        {
-            new Claim(ClaimTypes.Name, usuario.Nombre),
-            new Claim(ClaimTypes.Role, usuario.Rol),
-            new Claim(ClaimTypes.NameIdentifier, usuario.Id.ToString())
-        };
+                // Retorna los datos del usuario y la cookie por separado
+                return Ok(new { usuario, tokenString });
 
-                var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-                var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
 
-                // Autenticar al usuario usando cookies
-                await HttpContext.SignInAsync(
-                    CookieAuthenticationDefaults.AuthenticationScheme,
-                    claimsPrincipal,
-                    new AuthenticationProperties
-                    {
-                        IsPersistent = true,
-                        ExpiresUtc = DateTimeOffset.UtcNow.AddHours(24)
-                    });
-
-                return Ok(tokenString);
+                //return Ok(tokenString);
 
 
             
@@ -233,24 +219,21 @@ namespace FondoUnicoAPI.Controllers
             }
         }
 
-        [HttpPost("protected")]
+        [HttpGet("logged")]
         [Authorize]
-        public IActionResult Protected(ClaimsPrincipal user)
+        //Recupera los datos del usuario con el token que viene en el header
+        public async Task<IActionResult> getUserLogged()
         {
-            // Aquí puedes acceder a la información del usuario autenticado
-            string cookieValue = HttpContext.Request.Cookies["AuthToken"];
+            var id = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var usuario = await _context.Usuario.FindAsync(id);
 
-            if(cookieValue != null)
+            if(usuario == null)
             {
-                return Ok($"El valor de la cookie AuthToken es: {cookieValue}");
+                return NotFound(new { message = "Usuario no encontrado" });
             }
-            else
-            {
-                return Ok("La cookie AuthToken no está presente o es nula.");
-            }
+
+            return Ok(usuario);
         }
-    
-
 
         public class LoginRequest
         {

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using FondoUnicoAPI.Context;
 using FondoUnicoAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FondoUnicoAPI.Controllers
 {
@@ -23,6 +24,7 @@ namespace FondoUnicoAPI.Controllers
 
         // GET: api/ModelosMotos
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<ModelosMotos>>> GetModelos()
         {
             return await _context.Modelos.ToListAsync();
@@ -30,6 +32,7 @@ namespace FondoUnicoAPI.Controllers
 
         // GET: api/ModelosMotos/5
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<ActionResult<ModelosMotos>> GetModelosMotos(int id)
         {
             var modelosMotos = await _context.Modelos.FindAsync(id);
@@ -45,6 +48,7 @@ namespace FondoUnicoAPI.Controllers
         // PUT: api/ModelosMotos/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<IActionResult> PutModelosMotos(int id, ModelosMotos modelosMotos)
         {
             if (id != modelosMotos.Id)
@@ -76,6 +80,7 @@ namespace FondoUnicoAPI.Controllers
         // POST: api/ModelosMotos
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult<ModelosMotos>> PostModelosMotos(ModelosMotos modelosMotos)
         {
             _context.Modelos.Add(modelosMotos);
@@ -84,7 +89,7 @@ namespace FondoUnicoAPI.Controllers
             return CreatedAtAction("GetModelosMotos", new { id = modelosMotos.Id }, modelosMotos);
         }
         [HttpPost("{Marca}")]
-
+        [Authorize]
         public async Task<ActionResult<ModelosMotos>> PostModelosMotos(string Marca, ModelosMotos modelosMotos)
         {
             // Obten el ID de Marca
@@ -106,6 +111,7 @@ namespace FondoUnicoAPI.Controllers
 
         // DELETE: api/ModelosMotos/5
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<IActionResult> DeleteModelosMotos(int id)
         {
             var modelosMotos = await _context.Modelos.FindAsync(id);

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using FondoUnicoAPI.Context;
 using FondoUnicoAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FondoUnicoAPI.Controllers
 {
@@ -23,6 +24,7 @@ namespace FondoUnicoAPI.Controllers
 
         // GET: api/Tipos
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<Tipos>>> GetTipos()
         {
             return await _context.Tipos.ToListAsync();
@@ -30,6 +32,7 @@ namespace FondoUnicoAPI.Controllers
 
         // GET: api/Tipos/5
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<ActionResult<Tipos>> GetTipos(int id)
         {
             var tipos = await _context.Tipos.FindAsync(id);
@@ -45,6 +48,7 @@ namespace FondoUnicoAPI.Controllers
         // PUT: api/Tipos/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<IActionResult> PutTipos(int id, Tipos tipos)
         {
             if (id != tipos.Id)
@@ -76,6 +80,7 @@ namespace FondoUnicoAPI.Controllers
         // POST: api/Tipos
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult<Tipos>> PostTipos(Tipos tipos)
         {
             _context.Tipos.Add(tipos);
@@ -86,6 +91,7 @@ namespace FondoUnicoAPI.Controllers
 
         // DELETE: api/Tipos/5
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<IActionResult> DeleteTipos(int id)
         {
             var tipos = await _context.Tipos.FindAsync(id);

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using FondoUnicoAPI.Context;
 using FondoUnicoAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FondoUnicoAPI.Controllers
 {
@@ -23,6 +24,7 @@ namespace FondoUnicoAPI.Controllers
 
         // GET: api/Depositos
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<Deposito>>> GetDeposito()
         {
             return await _context.Deposito.ToListAsync();
@@ -31,6 +33,7 @@ namespace FondoUnicoAPI.Controllers
        
 
         [HttpGet("{unidad}/{fechaInicio}/{fechaFinal}")]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<Deposito>>> GetDepositosPorUnidadFecha(string unidad, DateTime fechaInicio, DateTime fechaFinal)
         {
             if(unidad == "Listar todo")
@@ -48,6 +51,7 @@ namespace FondoUnicoAPI.Controllers
 
         // GET: api/Depositos/5
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<ActionResult<Deposito>> GetDeposito(int id)
         {
             var deposito = await _context.Deposito.FindAsync(id);
@@ -63,6 +67,7 @@ namespace FondoUnicoAPI.Controllers
         // PUT: api/Depositos/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<IActionResult> PutDeposito(int id, Deposito deposito)
         {
             if (id != deposito.NroDeposito)
@@ -94,6 +99,7 @@ namespace FondoUnicoAPI.Controllers
         // POST: api/Depositos
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult<Deposito>> PostDeposito(Deposito deposito)
         {
             _context.Deposito.Add(deposito);
@@ -104,6 +110,7 @@ namespace FondoUnicoAPI.Controllers
 
         // DELETE: api/Depositos/5
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<IActionResult> DeleteDeposito(int id)
         {
             var deposito = await _context.Deposito.FindAsync(id);
