@@ -15,8 +15,6 @@ using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication;
 
 
 namespace FondoUnicoAPI.Controllers
@@ -198,7 +196,7 @@ namespace FondoUnicoAPI.Controllers
                 {
                     HttpOnly = false,       // Hace que el token no sea accesible desde JavaScript
                     Secure = false,         // Asegura la cookie en conexiones HTTPS
-                    SameSite = SameSiteMode.Lax, // Previene que la cookie sea enviada en solicitudes cross-site
+                    SameSite = SameSiteMode.Strict, // Previene que la cookie sea enviada en solicitudes cross-site
                     Expires = DateTime.UtcNow.AddHours(24) // Configura el tiempo de expiración
                 });
 
