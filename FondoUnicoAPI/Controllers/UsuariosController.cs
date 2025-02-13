@@ -32,6 +32,7 @@ namespace FondoUnicoAPI.Controllers
 
         // Haz una ruta /registrar-usuario 
         [HttpPost("registrar-usuario")]
+        [Authorize]
         public async Task<IActionResult> AltaUsuario([FromBody] UsuarioRequest request){
             // Obtener del archivo .env POLICIA_DIGITAL_URL
             var urlPoliciaDigital = Environment.GetEnvironmentVariable("POLICIA_DIGITAL_URL");
@@ -181,6 +182,7 @@ namespace FondoUnicoAPI.Controllers
                         new Claim(ClaimTypes.NameIdentifier, usuario.Id.ToString())
                         //  new Claim(ClaimTypes.)
                     }),
+                
                     Expires = DateTime.UtcNow.AddHours(24),
                     SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(byteKey), SecurityAlgorithms.HmacSha256Signature)
                 };

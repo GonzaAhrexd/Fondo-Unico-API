@@ -1,4 +1,5 @@
 ﻿using FondoUnicoAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Any;
@@ -19,6 +20,7 @@ public class VehiclesController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize]
     public async Task<IActionResult> Get()
     {
         try
@@ -46,6 +48,7 @@ public class VehiclesController : ControllerBase
     }
     // Haz un get por marcas
     [HttpGet("{make}")]
+    [Authorize]
     public async Task<IActionResult> Get(string make)
     {
         try
@@ -74,6 +77,7 @@ public class VehiclesController : ControllerBase
    
 
     [HttpGet("motorcycles")]
+    [Authorize]
     public async Task<IActionResult> GetMotorcycles()
     {
         try

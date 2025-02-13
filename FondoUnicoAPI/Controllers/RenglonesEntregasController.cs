@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using FondoUnicoAPI.Context;
 using FondoUnicoAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FondoUnicoAPI.Controllers
 {
@@ -23,6 +24,7 @@ namespace FondoUnicoAPI.Controllers
 
         // GET: api/RenglonesEntregas
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<RenglonesEntrega>>> GetRenglonesEntregas()
         {
             return await _context.RenglonesEntregas.ToListAsync();
@@ -30,6 +32,7 @@ namespace FondoUnicoAPI.Controllers
 
         // GET: api/RenglonesEntregas/5
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<ActionResult<RenglonesEntrega>> GetRenglonesEntrega(int id)
         {
             var renglonesEntrega = await _context.RenglonesEntregas.FindAsync(id);
@@ -45,6 +48,7 @@ namespace FondoUnicoAPI.Controllers
         // PUT: api/RenglonesEntregas/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<IActionResult> PutRenglonesEntrega(int id, RenglonesEntrega renglonesEntrega)
         {
             if (id != renglonesEntrega.Id)
@@ -76,6 +80,7 @@ namespace FondoUnicoAPI.Controllers
         // POST: api/RenglonesEntregas
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult<RenglonesEntrega>> PostRenglonesEntrega(RenglonesEntrega renglonesEntrega)
         {
             _context.RenglonesEntregas.Add(renglonesEntrega);
@@ -86,6 +91,7 @@ namespace FondoUnicoAPI.Controllers
 
         // DELETE: api/RenglonesEntregas/5
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<IActionResult> DeleteRenglonesEntrega(int id)
         {
             var renglonesEntrega = await _context.RenglonesEntregas.FindAsync(id);

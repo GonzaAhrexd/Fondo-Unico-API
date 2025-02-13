@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using FondoUnicoAPI.Context;
 using FondoUnicoAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FondoUnicoAPI.Controllers
 {
@@ -23,6 +24,7 @@ namespace FondoUnicoAPI.Controllers
 
         // GET: api/Entregas
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<Entregas>>> GetEntregas()
         {
            return await _context.Entregas.Include(e => e.RenglonesEntregas).ToListAsync();
@@ -31,6 +33,7 @@ namespace FondoUnicoAPI.Controllers
 
         // GET: api/Entregas/5
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<ActionResult<Entregas>> GetEntregas(int id)
         {
             var entregas = await _context.Entregas.FindAsync(id);
@@ -46,6 +49,7 @@ namespace FondoUnicoAPI.Controllers
         // Agrega una petición que sea del formato api/Entregas/Unidad/FechaInicio/FechaFinal, es decir que se pueda pasar Unidad, FechaInicio y FechaFinal en los params
 
         [HttpGet("{unidad}/{fechaInicio}/{fechaFinal}")]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<Entregas>>> GetEntregasPorUnidadFecha(string unidad, DateTime fechaInicio, DateTime fechaFinal)
         {
             // Si Unidad es Listar Todo, no filtrar por Unidad
@@ -61,6 +65,7 @@ namespace FondoUnicoAPI.Controllers
         // PUT: api/Entregas/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<IActionResult> PutEntregas(int id, Entregas entregas)
         {
             if(id != entregas.NroEntrega)
@@ -108,6 +113,7 @@ namespace FondoUnicoAPI.Controllers
         // POST: api/Entregas
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult<Entregas>> PostEntregas(Entregas entregas)
         {
             _context.Entregas.Add(entregas);
@@ -118,6 +124,7 @@ namespace FondoUnicoAPI.Controllers
 
         // DELETE: api/Entregas/5
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<IActionResult> DeleteEntregas(int id)
         {
             var entregas = await _context.Entregas.Include(e => e.RenglonesEntregas).FirstOrDefaultAsync(e => e.NroEntrega == id);

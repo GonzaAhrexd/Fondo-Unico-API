@@ -32,6 +32,7 @@ namespace FondoUnicoAPI.Controllers
 
         // GET: api/Unidades/5
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<ActionResult<Unidades>> GetUnidades(int id)
         {
             var unidades = await _context.Unidades.FindAsync(id);
@@ -47,6 +48,7 @@ namespace FondoUnicoAPI.Controllers
         // PUT: api/Unidades/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<IActionResult> PutUnidades(int id, Unidades unidades)
         {
             if (id != unidades.Id)
@@ -78,6 +80,7 @@ namespace FondoUnicoAPI.Controllers
         // POST: api/Unidades
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult<Unidades>> PostUnidades(Unidades unidades)
         {
             _context.Unidades.Add(unidades);
@@ -88,6 +91,7 @@ namespace FondoUnicoAPI.Controllers
 
         // DELETE: api/Unidades/5
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<IActionResult> DeleteUnidades(int id)
         {
             var unidades = await _context.Unidades.FindAsync(id);

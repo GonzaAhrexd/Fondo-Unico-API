@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using FondoUnicoAPI.Context;
 using FondoUnicoAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FondoUnicoAPI.Controllers
 {
@@ -23,6 +24,7 @@ namespace FondoUnicoAPI.Controllers
 
         // GET: api/MarcasMotos
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<MarcasMotos>>> GetMarcas()
         {
             var Marcas = await _context.Marcas.ToListAsync();
@@ -38,6 +40,7 @@ namespace FondoUnicoAPI.Controllers
 
         // GET: api/MarcasMotos/5
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<ActionResult<MarcasMotos>> GetMarcasMotos(int id)
         {
             var marcasMotos = await _context.Marcas.FindAsync(id);
@@ -50,6 +53,7 @@ namespace FondoUnicoAPI.Controllers
             return marcasMotos;
         }
         [HttpGet("Modelos/{marca}")]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<ModelosMotos>>> GetModelosAutos(string marca)
         {
             var marcaId = _context.Marcas.Where(m => m.Marca == marca).FirstOrDefault().Id;
@@ -73,6 +77,7 @@ namespace FondoUnicoAPI.Controllers
         // PUT: api/MarcasMotos/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<IActionResult> PutMarcasMotos(int id, MarcasMotos marcasMotos)
         {
             if (id != marcasMotos.Id)
@@ -104,6 +109,7 @@ namespace FondoUnicoAPI.Controllers
         // POST: api/MarcasMotos
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult<MarcasMotos>> PostMarcasMotos(MarcasMotos marcasMotos)
         {
             _context.Marcas.Add(marcasMotos);
@@ -114,6 +120,7 @@ namespace FondoUnicoAPI.Controllers
 
         // DELETE: api/MarcasMotos/5
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<IActionResult> DeleteMarcasMotos(int id)
         {
             var marcasMotos = await _context.Marcas.FindAsync(id);

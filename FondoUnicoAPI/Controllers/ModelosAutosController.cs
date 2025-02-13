@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using FondoUnicoAPI.Context;
 using FondoUnicoAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FondoUnicoAPI.Controllers
 {
@@ -23,6 +24,7 @@ namespace FondoUnicoAPI.Controllers
 
         // GET: api/ModelosAutos
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<ModelosAutos>>> GetModelosAutos()
         {
             return await _context.ModelosAutos.ToListAsync();
@@ -30,6 +32,7 @@ namespace FondoUnicoAPI.Controllers
 
         // GET: api/ModelosAutos/5
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<ActionResult<ModelosAutos>> GetModelosAutos(int id)
         {
             var modelosAutos = await _context.ModelosAutos.FindAsync(id);
@@ -45,6 +48,7 @@ namespace FondoUnicoAPI.Controllers
         // PUT: api/ModelosAutos/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<IActionResult> PutModelosAutos(int id, ModelosAutos modelosAutos)
         {
             if (id != modelosAutos.Id)
@@ -76,6 +80,7 @@ namespace FondoUnicoAPI.Controllers
         // POST: api/ModelosAutos
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost("{Marca}")]
+        [Authorize]
         public async Task<ActionResult<ModelosAutos>> PostModelosAutos(string Marca, ModelosAutos modelosAutos)
         {
             // Obten el ID de Marca
@@ -94,6 +99,7 @@ namespace FondoUnicoAPI.Controllers
 
         // DELETE: api/ModelosAutos/5
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<IActionResult> DeleteModelosAutos(int id)
         {
             var modelosAutos = await _context.ModelosAutos.FindAsync(id);

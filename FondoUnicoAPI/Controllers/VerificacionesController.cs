@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using FondoUnicoAPI.Context;
 using FondoUnicoAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FondoUnicoAPI.Controllers
 {
@@ -23,6 +24,7 @@ namespace FondoUnicoAPI.Controllers
 
         // GET: api/Verificaciones
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<Verificaciones>>> GetVerificaciones()
         {
             return await _context.Verificaciones.ToListAsync();
@@ -30,6 +32,7 @@ namespace FondoUnicoAPI.Controllers
 
         // Haz un get por Unidad y Fecha 
         [HttpGet("{unidad}/{fecha}")]
+        [Authorize]
         public async Task<IActionResult> Get(string unidad, DateTime fecha)
         {
             var verificaciones = await _context.Verificaciones
@@ -45,6 +48,7 @@ namespace FondoUnicoAPI.Controllers
         }
 
         [HttpGet("{unidad}/{desde}/{hasta}")]
+        [Authorize]
         public async Task<IActionResult> Get(string unidad, DateTime desde, DateTime hasta)
         {
             var verificaciones = await _context.Verificaciones
@@ -63,6 +67,7 @@ namespace FondoUnicoAPI.Controllers
 
         // GET: api/Verificaciones/5
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<ActionResult<Verificaciones>> GetVerificaciones(int id)
         {
             var verificaciones = await _context.Verificaciones.FindAsync(id);
@@ -78,6 +83,7 @@ namespace FondoUnicoAPI.Controllers
         // PUT: api/Verificaciones/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<IActionResult> PutVerificaciones(int id, Verificaciones verificaciones)
         {
             if (id != verificaciones.Id)
@@ -109,6 +115,7 @@ namespace FondoUnicoAPI.Controllers
         // POST: api/Verificaciones
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult<Verificaciones>> PostVerificaciones(Verificaciones verificaciones)
         {
             _context.Verificaciones.Add(verificaciones);
@@ -119,6 +126,7 @@ namespace FondoUnicoAPI.Controllers
 
         // DELETE: api/Verificaciones/5
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<IActionResult> DeleteVerificaciones(int id)
         {
             var verificaciones = await _context.Verificaciones.FindAsync(id);

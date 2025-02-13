@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using FondoUnicoAPI.Context;
 using FondoUnicoAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FondoUnicoAPI.Controllers
 {
@@ -23,6 +24,7 @@ namespace FondoUnicoAPI.Controllers
 
         // GET: api/Bancos
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<Bancos>>> GetBancos()
         {
             return await _context.Bancos.ToListAsync();
@@ -30,6 +32,7 @@ namespace FondoUnicoAPI.Controllers
 
         // GET: api/Bancos/5
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<ActionResult<Bancos>> GetBancos(int id)
         {
             var bancos = await _context.Bancos.FindAsync(id);
@@ -45,6 +48,7 @@ namespace FondoUnicoAPI.Controllers
         // PUT: api/Bancos/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<IActionResult> PutBancos(int id, Bancos bancos)
         {
             if (id != bancos.Id)
@@ -76,6 +80,7 @@ namespace FondoUnicoAPI.Controllers
         // POST: api/Bancos
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult<Bancos>> PostBancos(Bancos bancos)
         {
             _context.Bancos.Add(bancos);
@@ -86,6 +91,7 @@ namespace FondoUnicoAPI.Controllers
 
         // DELETE: api/Bancos/5
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<IActionResult> DeleteBancos(int id)
         {
             var bancos = await _context.Bancos.FindAsync(id);

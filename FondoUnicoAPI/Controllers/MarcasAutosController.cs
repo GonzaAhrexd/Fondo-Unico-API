@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using FondoUnicoAPI.Context;
 using FondoUnicoAPI.Models;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FondoUnicoAPI.Controllers
 {
@@ -24,6 +25,7 @@ namespace FondoUnicoAPI.Controllers
 
         // GET: api/MarcasAutos
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<MarcasAutos>>> GetMarcasAutos()
         {
             var Marcas = await _context.MarcasAutos.ToListAsync();
@@ -36,6 +38,7 @@ namespace FondoUnicoAPI.Controllers
 
         // GET: api/MarcasAutos/5
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<ActionResult<MarcasAutos>> GetMarcasAutos(int id)
         {
             var marcasAutos = await _context.MarcasAutos.FindAsync(id);
@@ -49,6 +52,7 @@ namespace FondoUnicoAPI.Controllers
         }
         // Haz que ingresando una marca me devuelva los modelos de autos de esa marca buscando por ID en la tabla de ModelosAutos, es decir, te paso una marca, extraes el ID y lo buscas en modelos de auto
         [HttpGet("Modelos/{marca}")]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<ModelosAutos>>> GetModelosAutos(string marca)
         {
             var marcaId = _context.MarcasAutos.Where(m => m.Marca == marca).FirstOrDefault().Id;
@@ -67,6 +71,7 @@ namespace FondoUnicoAPI.Controllers
         }
 
         [HttpPost("Modelos")]
+        [Authorize]
         public async Task<ActionResult<MarcasAutos>> PostModelosAutos(String marcasAutos)
         {
             // Busca en la base de Datos una Marca con el nombre ingresado en marcasAutos y extrae el ID
@@ -121,6 +126,7 @@ namespace FondoUnicoAPI.Controllers
         }
 
 
+        // PUT: api/MarcasAutos/5
         // PUT: api/MarcasAutos/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
