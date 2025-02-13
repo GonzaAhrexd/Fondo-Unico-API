@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("FondoUnicoAPI")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b4c8924e0e33afcd8175eba84e43bad6a0b5ce77")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ae964ce4566483db87bdf38eb04e8a9d389ea4b6")]
 [assembly: System.Reflection.AssemblyProductAttribute("FondoUnicoAPI")]
 [assembly: System.Reflection.AssemblyTitleAttribute("FondoUnicoAPI")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

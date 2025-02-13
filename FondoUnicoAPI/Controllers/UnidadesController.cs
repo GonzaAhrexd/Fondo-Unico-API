@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using FondoUnicoAPI.Context;
 using FondoUnicoAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FondoUnicoAPI.Controllers
 {
@@ -23,6 +24,7 @@ namespace FondoUnicoAPI.Controllers
 
         // GET: api/Unidades
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<Unidades>>> GetUnidades()
         {
             return await _context.Unidades.ToListAsync();

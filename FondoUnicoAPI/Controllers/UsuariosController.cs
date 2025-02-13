@@ -192,14 +192,17 @@ namespace FondoUnicoAPI.Controllers
 
                 Response.Cookies.Append("AuthToken", tokenString, new CookieOptions
                 {
-                    HttpOnly = true,       // Hace que el token no sea accesible desde JavaScript
+                    HttpOnly = false,       // Hace que el token no sea accesible desde JavaScript
                     Secure = false,         // Asegura la cookie en conexiones HTTPS
                     SameSite = SameSiteMode.Strict, // Previene que la cookie sea enviada en solicitudes cross-site
                     Expires = DateTime.UtcNow.AddHours(24) // Configura el tiempo de expiración
                 });
 
+                // Retorna los datos del usuario y la cookie por separado
+                return Ok(new { usuario, tokenString });
 
-                return Ok(tokenString);
+
+                //return Ok(tokenString);
 
 
             
@@ -212,14 +215,21 @@ namespace FondoUnicoAPI.Controllers
             }
         }
 
-        [HttpGet("protected")]
+        [HttpGet("logged")]
         [Authorize]
-        public IActionResult Protected(ClaimsPrincipal user)
+        //Recupera los datos del usuario con el token que viene en el header
+        public async Task<IActionResult> getUserLogged()
         {
-            // Aquí puedes acceder a la información del usuario autenticado
-            return Ok($"Hola");
-        }
+            var id = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var usuario = await _context.Usuario.FindAsync(id);
 
+            if(usuario == null)
+            {
+                return NotFound(new { message = "Usuario no encontrado" });
+            }
+
+            return Ok(usuario);
+        }
 
         public class LoginRequest
         {
