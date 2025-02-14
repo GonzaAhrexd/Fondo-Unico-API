@@ -15,6 +15,7 @@ using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
+using System.Net;
 
 
 namespace FondoUnicoAPI.Controllers
@@ -32,7 +33,7 @@ namespace FondoUnicoAPI.Controllers
 
         // Haz una ruta /registrar-usuario 
         [HttpPost("registrar-usuario")]
-        [Authorize]
+   //     [Authorize]
         public async Task<IActionResult> AltaUsuario([FromBody] UsuarioRequest request){
             // Obtener del archivo .env POLICIA_DIGITAL_URL
             var urlPoliciaDigital = Environment.GetEnvironmentVariable("POLICIA_DIGITAL_URL");
@@ -74,7 +75,9 @@ namespace FondoUnicoAPI.Controllers
                       Nombre = usuario.Data.Civil.Nombre,
                       Apellido =  usuario.Data.Civil.Apellido,
                       Usuario_repo =  usuario.Data.Id.ToString(),
-                      Nombre_de_usuario =  usuario.Data.Usuario
+                      Nombre_de_usuario =  usuario.Data.Usuario,
+                      DNI = request.Dni, 
+                      Unidad = request.Unidad
                   };
 
                   _context.Usuario.Add(AltaUsuarioNuevo);
@@ -94,14 +97,19 @@ namespace FondoUnicoAPI.Controllers
                     if(usuario?.Data == null)
                         return NotFound(new { message = "Usuario no encontrado" });
 
+
+
                     var AltaUsuarioNuevo = new Usuario
                     {
                         Rol = request.Rol,
                         Nombre = usuario.Data.Persona.Nombre,
                         Apellido =  usuario.Data.Persona.Apellido,
                         Usuario_repo =  usuario.Data.Id.ToString(),
-                        Nombre_de_usuario =  usuario.Data.Usuario
+                        Nombre_de_usuario =  usuario.Data.Usuario,
+                        DNI = request.Dni,
+                        Unidad = request.Unidad
                     };
+
 
                     _context.Usuario.Add(AltaUsuarioNuevo);
                     _context.SaveChanges();
@@ -120,6 +128,54 @@ namespace FondoUnicoAPI.Controllers
             }
         }
 
+        [HttpGet("buscar-usuario-dni/{dni}")]
+        public async Task<IActionResult> BuscarUsuarioDNI(string dni){
+            try{
+                
+                var usuario = await _context.Usuario.FirstOrDefaultAsync(u => u.DNI == dni);
+                if(usuario == null)
+                {
+                    return NotFound(new { message = "Usuario no encontrado" });
+                }
+
+                return Ok(usuario);
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex);
+                return StatusCode(500, "Error interno del servidor");   
+            }
+
+
+
+        }   
+
+        [HttpGet("buscar-usuarios/{rol}/{unidad}")]
+        public async Task<IActionResult> BuscarUsuarios(string rol, string unidad )
+        {
+            try
+            {
+                bool rolIngresado = rol != "no_ingresado";
+                bool unidadIngresada = unidad != "no_ingresada";
+
+                var query = _context.Usuario.AsQueryable();
+
+                if(rolIngresado)
+                    query = query.Where(u => u.Rol == rol);
+
+                if(unidadIngresada)
+                    query = query.Where(u => u.Unidad == unidad);
+
+
+                return Ok(await query.ToListAsync());
+
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex);
+                return StatusCode(500, "Error interno del servidor");
+            }
+        }
 
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest request)
@@ -233,6 +289,8 @@ namespace FondoUnicoAPI.Controllers
             return Ok(usuario);
         }
 
+
+
         public class LoginRequest
         {
             public string Usuario { get; set; }
@@ -295,6 +353,7 @@ namespace FondoUnicoAPI.Controllers
             public string Dni { get; set; }
             public string Rol { get; set; }
             public string tipoUsuario { get; set; }
+            public string Unidad { get; set; }
         }
 
         public class UsuarioPoliciaResponse {          

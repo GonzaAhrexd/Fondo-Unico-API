@@ -64,8 +64,6 @@ namespace FondoUnicoAPI
 
             var app = builder.Build();
 
-            app.MapGet("/protected", (ClaimsPrincipal user) => "Hello World!" + user.Identity?.Name).RequireAuthorization(p => p.RequireRole("string"));
-
 
             // Configure the HTTP request pipeline.
             if(app.Environment.IsDevelopment())
