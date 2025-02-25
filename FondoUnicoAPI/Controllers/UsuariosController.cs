@@ -46,6 +46,15 @@ namespace FondoUnicoAPI.Controllers
             // Extra del body solamente dni
             try
             {
+                    // Busca si el DNI ya existe en la BD
+                    var usuarioExistente = await _context.Usuario.FirstOrDefaultAsync(u => u.DNI == request.Dni);
+                if(usuarioExistente != null)
+                {
+                    
+                        return BadRequest(new { message = "El usuario ya existe" });
+                    }
+
+                
                 var response = await _httpClient.PostAsync(
                     $"{urlPoliciaDigital}/api_registroUsuario/usuario/find/usuarioSistema/{request.Dni}",
                     null
@@ -119,6 +128,7 @@ namespace FondoUnicoAPI.Controllers
                     return Ok(AltaUsuarioNuevo);
 
                 }
+                return Ok("Hola");
               
             }
             catch(Exception ex)
