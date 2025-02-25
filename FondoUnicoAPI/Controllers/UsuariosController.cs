@@ -156,7 +156,7 @@ namespace FondoUnicoAPI.Controllers
             try
             {
                 bool rolIngresado = rol != "no_ingresado";
-                bool unidadIngresada = unidad != "no_ingresada";
+                bool unidadIngresada = unidad != "no_ingresado";
 
                 var query = _context.Usuario.AsQueryable();
 
@@ -322,6 +322,25 @@ namespace FondoUnicoAPI.Controllers
             return NoContent();
         }
 
+        [HttpPut("update-usuario/{id}")]
+       // Necesito que solo tome Rol y Unidad y solo modifique eso de la BD
+       public async Task<IActionResult> UpdateUsuario(int id, [FromBody] UsuarioRequestEdit request)
+        {
+            var usuario = await _context.Usuario.FindAsync(id);
+            if (usuario == null)
+            {
+                return NotFound();
+            }
+
+            usuario.Rol = request.Rol;
+            usuario.Unidad = request.Unidad;
+
+            await _context.SaveChangesAsync();
+
+            return Ok(usuario);
+        }
+
+
 
 
         private string GenerarToken(Usuario usuario)
@@ -346,7 +365,11 @@ namespace FondoUnicoAPI.Controllers
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
+        public class UsuarioRequestEdit{ 
 
+            public string Rol { get; set; }
+            public string Unidad { get; set; }
+        }
 
         public class UsuarioRequest
         {
