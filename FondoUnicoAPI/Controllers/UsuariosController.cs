@@ -128,7 +128,6 @@ namespace FondoUnicoAPI.Controllers
                     return Ok(AltaUsuarioNuevo);
 
                 }
-                return Ok("Hola");
               
             }
             catch(Exception ex)
