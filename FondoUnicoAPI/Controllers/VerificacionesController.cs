@@ -47,12 +47,33 @@ namespace FondoUnicoAPI.Controllers
             return Ok(verificaciones); // Devuelve un 200 OK con los resultados
         }
 
-        [HttpGet("{unidad}/{desde}/{hasta}")]
+        [HttpGet("{unidad}/{desde}/{hasta}/{tipo}")]
         [Authorize]
-        public async Task<IActionResult> Get(string unidad, DateTime desde, DateTime hasta)
+        public async Task<IActionResult> Get(string unidad, DateTime desde, DateTime hasta, string tipo)
+        {
+            var query = _context.Verificaciones
+                                .Where(x => x.Unidad == unidad && x.Fecha >= desde && x.Fecha <= hasta);
+
+            if(!string.IsNullOrEmpty(tipo) && tipo != "no_ingresado")
+            {
+                query = query.Where(x => x.Tipo == tipo);
+            }
+
+            var verificaciones = await query.ToListAsync();
+
+            if(!verificaciones.Any())
+            {
+                return NotFound(); // Devuelve un 404 si no se encuentra ninguna verificación
+            }
+
+            return Ok(verificaciones); // Devuelve un 200 OK con los resultados
+        }
+        [HttpGet("buscar-por-verificacion/{recibo}")]
+        [Authorize]
+        public async Task<IActionResult> Get(int recibo)
         {
             var verificaciones = await _context.Verificaciones
-                                               .Where(x => x.Unidad == unidad && x.Fecha >= desde && x.Fecha <= hasta)
+                                               .Where(x => x.Recibo == recibo)
                                                .ToListAsync();
 
             if(verificaciones == null || !verificaciones.Any())
@@ -62,8 +83,6 @@ namespace FondoUnicoAPI.Controllers
 
             return Ok(verificaciones); // Devuelve un 200 OK con los resultados
         }
-
-
 
         // GET: api/Verificaciones/5
         [HttpGet("{id}")]

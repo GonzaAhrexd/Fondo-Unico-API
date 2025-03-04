@@ -46,7 +46,12 @@ namespace FondoUnicoAPI.Controllers
         
         
         }
-
+        [HttpGet("buscar-por-nro-ticket/{nroTicket}")]
+        [Authorize]
+        public async Task<ActionResult<IEnumerable<Deposito>>> GetDepositosPorNroTicket(int nroTicket)
+        {
+            return await _context.Deposito.Where(e => e.NroTicket == nroTicket).ToListAsync();
+        }
 
 
         // GET: api/Depositos/5

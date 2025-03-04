@@ -8,6 +8,7 @@ namespace FondoUnicoAPI.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)] // Configura como auto incremental    
         public int NroDeposito { get; set; }
+        public int NroTicket { get; set; }
         public DateTime Fecha { get; set; }
         public string Unidad { get; set; }
         public string Banco { get; set; }
