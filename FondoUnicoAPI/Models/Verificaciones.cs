@@ -19,6 +19,8 @@ namespace FondoUnicoAPI.Models
         public string Anio { get; set; }
         public string Dominio { get; set; }
         public double Importe { get; set; }
+        public bool estaActivo { get; set; }
+
 
 
     }

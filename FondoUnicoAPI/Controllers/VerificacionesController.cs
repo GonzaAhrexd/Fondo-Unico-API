@@ -27,19 +27,20 @@ namespace FondoUnicoAPI.Controllers
         [Authorize]
         public async Task<ActionResult<IEnumerable<Verificaciones>>> GetVerificaciones()
         {
-            return await _context.Verificaciones.ToListAsync();
+            return await _context.Verificaciones.Where(e => e.estaActivo == true).ToListAsync();
+
         }
 
         // Haz un get por Unidad y Fecha 
         [HttpGet("{unidad}/{fecha}")]
-        [Authorize]
+        //[Authorize]
         public async Task<IActionResult> Get(string unidad, DateTime fecha)
         {
             var verificaciones = await _context.Verificaciones
-                                               .Where(x => x.Unidad == unidad && x.Fecha == fecha)
+                                               .Where(x => x.Unidad == unidad && x.Fecha == fecha && x.estaActivo == true)
                                                .ToListAsync();
 
-            if(verificaciones == null || !verificaciones.Any())
+            if(verificaciones == null )
             {
                 return NotFound(); // Devuelve un 404 si no se encuentra ninguna verificación
             }
@@ -52,7 +53,7 @@ namespace FondoUnicoAPI.Controllers
         public async Task<IActionResult> Get(string unidad, DateTime desde, DateTime hasta, string tipo)
         {
             var query = _context.Verificaciones
-                                .Where(x => x.Unidad == unidad && x.Fecha >= desde && x.Fecha <= hasta);
+                                .Where(x => x.Unidad == unidad && x.Fecha >= desde && x.Fecha <= hasta && x.estaActivo == true);
 
             if(!string.IsNullOrEmpty(tipo) && tipo != "no_ingresado")
             {
@@ -73,7 +74,7 @@ namespace FondoUnicoAPI.Controllers
         public async Task<IActionResult> Get(int recibo)
         {
             var verificaciones = await _context.Verificaciones
-                                               .Where(x => x.Recibo == recibo)
+                                               .Where(x => x.Recibo == recibo && x.estaActivo == true)
                                                .ToListAsync();
 
             if(verificaciones == null || !verificaciones.Any())
@@ -91,12 +92,12 @@ namespace FondoUnicoAPI.Controllers
         {
             var verificaciones = await _context.Verificaciones.FindAsync(id);
 
-            if (verificaciones == null)
+            if(verificaciones == null || !verificaciones.estaActivo)    
             {
-                return NotFound();
+                return NotFound(); // Devuelve 404 si no existe o si EstaActivo es false
             }
 
-            return verificaciones;
+            return verificaciones; // Devuelve el objeto solo si EstaActivo es true
         }
 
         // PUT: api/Verificaciones/5
@@ -105,6 +106,7 @@ namespace FondoUnicoAPI.Controllers
         [Authorize]
         public async Task<IActionResult> PutVerificaciones(int id, Verificaciones verificaciones)
         {
+            verificaciones.estaActivo = true;
             if (id != verificaciones.Id)
             {
                 return BadRequest();
@@ -137,6 +139,8 @@ namespace FondoUnicoAPI.Controllers
         [Authorize]
         public async Task<ActionResult<Verificaciones>> PostVerificaciones(Verificaciones verificaciones)
         {
+            verificaciones.estaActivo = true;
+
             _context.Verificaciones.Add(verificaciones);
             await _context.SaveChangesAsync();
 
@@ -154,10 +158,13 @@ namespace FondoUnicoAPI.Controllers
                 return NotFound();
             }
 
-            _context.Verificaciones.Remove(verificaciones);
+
+            verificaciones.estaActivo = false;
+            _context.Verificaciones.Update(verificaciones);
             await _context.SaveChangesAsync();
 
             return NoContent();
+
         }
 
         private bool VerificacionesExists(int id)

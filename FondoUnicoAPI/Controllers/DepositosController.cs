@@ -27,7 +27,11 @@ namespace FondoUnicoAPI.Controllers
         [Authorize]
         public async Task<ActionResult<IEnumerable<Deposito>>> GetDeposito()
         {
-            return await _context.Deposito.ToListAsync();
+        
+
+            return await _context.Deposito.Where(e => e.estaActivo == true).ToListAsync();
+        
+        
         }
 
        
@@ -39,10 +43,10 @@ namespace FondoUnicoAPI.Controllers
             if(unidad == "Listar todo")
             {
                 // Retorna un arreglo con los depositos que cumplan con la fecha de inicio y final
-                return await _context.Deposito.Where(e => e.Fecha >= fechaInicio && e.Fecha <= fechaFinal).ToListAsync();
+                return await _context.Deposito.Where(e => e.Fecha >= fechaInicio && e.Fecha <= fechaFinal && e.estaActivo == true).ToListAsync();
             }
             // Retorna un arreglo con los depositos que cumplan con la unidad y la fecha de inicio y final
-            return await _context.Deposito.Where(e => e.Unidad == unidad && e.Fecha >= fechaInicio && e.Fecha <= fechaFinal).ToListAsync();
+            return await _context.Deposito.Where(e => e.Unidad == unidad && e.Fecha >= fechaInicio && e.Fecha <= fechaFinal  && e.estaActivo == true).ToListAsync();
         
         
         }
@@ -50,7 +54,7 @@ namespace FondoUnicoAPI.Controllers
         [Authorize]
         public async Task<ActionResult<IEnumerable<Deposito>>> GetDepositosPorNroTicket(int nroTicket)
         {
-            return await _context.Deposito.Where(e => e.NroTicket == nroTicket).ToListAsync();
+            return await _context.Deposito.Where(e => e.NroTicket == nroTicket  && e.estaActivo == true).ToListAsync();
         }
 
 
@@ -59,9 +63,11 @@ namespace FondoUnicoAPI.Controllers
         [Authorize]
         public async Task<ActionResult<Deposito>> GetDeposito(int id)
         {
-            var deposito = await _context.Deposito.FindAsync(id);
+            var deposito = await _context.Deposito
+                .Where(d => d.NroDeposito == id && d.estaActivo) // Filtra por ID y estado activo
+                .FirstOrDefaultAsync();
 
-            if (deposito == null)
+            if(deposito == null)
             {
                 return NotFound();
             }
@@ -69,12 +75,14 @@ namespace FondoUnicoAPI.Controllers
             return deposito;
         }
 
+
         // PUT: api/Depositos/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         [Authorize]
         public async Task<IActionResult> PutDeposito(int id, Deposito deposito)
         {
+            deposito.estaActivo = true;
             if (id != deposito.NroDeposito)
             {
                 return BadRequest();
@@ -103,13 +111,18 @@ namespace FondoUnicoAPI.Controllers
 
         // POST: api/Depositos
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+     
         [HttpPost]
         [Authorize]
-        public async Task<ActionResult<Deposito>> PostDeposito(Deposito deposito)
+        public async Task<ActionResult<Deposito>> PostDeposito([FromBody] Deposito deposito)
         {
+            // Forzar EstaActivo a true al crear el depósito
+            deposito.estaActivo = true;
+
             _context.Deposito.Add(deposito);
             await _context.SaveChangesAsync();
 
+            // Devolver la acción con el id y el valor de EstaActivo actualizado
             return CreatedAtAction("GetDeposito", new { id = deposito.NroDeposito }, deposito);
         }
 
@@ -119,16 +132,18 @@ namespace FondoUnicoAPI.Controllers
         public async Task<IActionResult> DeleteDeposito(int id)
         {
             var deposito = await _context.Deposito.FindAsync(id);
-            if (deposito == null)
+            if(deposito == null)
             {
                 return NotFound();
             }
 
-            _context.Deposito.Remove(deposito);
+            deposito.estaActivo = false; // Marca el depósito como inactivo
+            _context.Deposito.Update(deposito); // Actualiza el registro en la base de datos
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
+
 
         private bool DepositoExists(int id)
         {

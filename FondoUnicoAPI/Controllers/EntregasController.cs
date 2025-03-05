@@ -27,7 +27,7 @@ namespace FondoUnicoAPI.Controllers
         [Authorize]
         public async Task<ActionResult<IEnumerable<Entregas>>> GetEntregas()
         {
-           return await _context.Entregas.Include(e => e.RenglonesEntregas).ToListAsync();
+           return await _context.Entregas.Where(e => e.estaActivo == true ).Include(e => e.RenglonesEntregas).ToListAsync();
            
         }
 
@@ -38,7 +38,7 @@ namespace FondoUnicoAPI.Controllers
         {
             var entregas = await _context.Entregas.FindAsync(id);
             // Haz que traiga la entrega con sus renglones
-            entregas = await _context.Entregas.Include(e => e.RenglonesEntregas).FirstOrDefaultAsync(e => e.NroEntrega == id);
+            entregas = await _context.Entregas.Include(e => e.RenglonesEntregas).FirstOrDefaultAsync(e => e.NroEntrega == id && e.estaActivo == true);
             if (entregas == null)
             {
                 return NotFound();
@@ -55,10 +55,10 @@ namespace FondoUnicoAPI.Controllers
             // Si Unidad es Listar Todo, no filtrar por Unidad
             if(unidad == "Listar todo")
             {
-                return await _context.Entregas.Include(e => e.RenglonesEntregas).Where(e => e.Fecha >= fechaInicio && e.Fecha <= fechaFinal).ToListAsync();
+                return await _context.Entregas.Include(e => e.RenglonesEntregas).Where(e => e.Fecha >= fechaInicio && e.Fecha <= fechaFinal && e.estaActivo == true).ToListAsync();
             }
 
-            return await _context.Entregas.Include(e => e.RenglonesEntregas).Where(e => e.Unidad == unidad && e.Fecha >= fechaInicio && e.Fecha <= fechaFinal).ToListAsync();
+            return await _context.Entregas.Include(e => e.RenglonesEntregas).Where(e => e.Unidad == unidad && e.Fecha >= fechaInicio && e.Fecha <= fechaFinal && e.estaActivo == true).ToListAsync();
         }
 
 
@@ -68,6 +68,7 @@ namespace FondoUnicoAPI.Controllers
         [Authorize]
         public async Task<IActionResult> PutEntregas(int id, Entregas entregas)
         {
+            entregas.estaActivo = true;
             if(id != entregas.NroEntrega)
             {
                 return BadRequest();
@@ -116,6 +117,7 @@ namespace FondoUnicoAPI.Controllers
         [Authorize]
         public async Task<ActionResult<Entregas>> PostEntregas(Entregas entregas)
         {
+            entregas.estaActivo = true;
             _context.Entregas.Add(entregas);
             await _context.SaveChangesAsync();
 
@@ -127,20 +129,21 @@ namespace FondoUnicoAPI.Controllers
         [Authorize]
         public async Task<IActionResult> DeleteEntregas(int id)
         {
-            var entregas = await _context.Entregas.Include(e => e.RenglonesEntregas).FirstOrDefaultAsync(e => e.NroEntrega == id);
+            var entrega = await _context.Entregas.Include(e => e.RenglonesEntregas).FirstOrDefaultAsync(e => e.NroEntrega == id);
 
-            if(entregas == null)
+            if(entrega == null)
             {
                 return NotFound();
             }
 
-            // Verificar si RenglonesEntregas no es null
-            if(entregas.RenglonesEntregas != null)
+            // Eliminar renglones asociados si existen
+            if(entrega.RenglonesEntregas != null)
             {
-                _context.RenglonesEntregas.RemoveRange(entregas.RenglonesEntregas);
+                _context.RenglonesEntregas.RemoveRange(entrega.RenglonesEntregas);
             }
 
-            _context.Entregas.Remove(entregas);
+            // Marcar la entrega como inactiva
+            entrega.estaActivo = false;
 
             await _context.SaveChangesAsync();
 

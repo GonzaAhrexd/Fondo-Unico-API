@@ -15,5 +15,7 @@ namespace FondoUnicoAPI.Models
         public string Cuenta { get; set; }
         public string Tipo { get; set; }
         public float Importe { get; set; }
+        public bool estaActivo { get; set; }
+
     }
 }

@@ -10,7 +10,7 @@ namespace FondoUnicoAPI.Models
         public int NroEntrega { get; set; }
         public DateTime Fecha { get; set; }
         public string Unidad { get; set; }
-
+        public bool estaActivo { get; set; }
         public virtual List<RenglonesEntrega> RenglonesEntregas { get; set; }
 
 
