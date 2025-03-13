@@ -38,7 +38,7 @@ namespace FondoUnicoAPI.Controllers
         {
             var entregas = await _context.Entregas.FindAsync(id);
             // Haz que traiga la entrega con sus renglones
-            entregas = await _context.Entregas.Include(e => e.RenglonesEntregas).FirstOrDefaultAsync(e => e.NroEntrega == id && e.estaActivo == true);
+            entregas = await _context.Entregas.Include(e => e.RenglonesEntregas).FirstOrDefaultAsync(e => e.NroEntregaManual == id && e.estaActivo == true);
             if (entregas == null)
             {
                 return NotFound();
