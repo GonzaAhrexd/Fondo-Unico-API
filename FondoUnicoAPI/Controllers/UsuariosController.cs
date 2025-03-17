@@ -9,8 +9,7 @@ using FondoUnicoAPI.Context;
 using FondoUnicoAPI.Models;
 using System.Net.Http;
 using System.Text.Json;
-using Microsoft.Identity.Client;
-using System.Text;
+using System.Text; 
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
@@ -26,20 +25,30 @@ namespace FondoUnicoAPI.Controllers
     {
         private readonly ApplicationDBContext _context;
         private static readonly HttpClient _httpClient = new HttpClient();
-        public UsuariosController(ApplicationDBContext context)
+        private readonly IConfiguration _configuration;
+
+      
+        public UsuariosController(IConfiguration configuration, ApplicationDBContext context)
         {
             _context = context;
+            _configuration = configuration;
+
         }
 
         // Haz una ruta /registrar-usuario 
         [HttpPost("registrar-usuario")]
-   //     [Authorize]
+        [Authorize]
         public async Task<IActionResult> AltaUsuario([FromBody] UsuarioRequest request){
             // Obtener del archivo .env POLICIA_DIGITAL_URL
-            var urlPoliciaDigital = Environment.GetEnvironmentVariable("POLICIA_DIGITAL_URL");
+
+        
+               var urlPoliciaDigital = _configuration["POLICIA_DIGITAL_URL"];
+
+
+
             if (urlPoliciaDigital == null)
             {
-                return StatusCode(500, "Error interno del servidor");
+                return StatusCode(500, urlPoliciaDigital);
             }
 
 
@@ -73,8 +82,13 @@ namespace FondoUnicoAPI.Controllers
                     PropertyNameCaseInsensitive = true
                 });
 
+
                 if(usuario?.Data == null)
+                    {
+
                     return NotFound(new { message = "Usuario no encontrado" });
+                    }
+
 
 
                     
@@ -133,11 +147,14 @@ namespace FondoUnicoAPI.Controllers
             catch(Exception ex)
             {
                 Console.WriteLine(ex);
-                return StatusCode(500, "Error interno del servidor");
+                return StatusCode(500, new { message = "Ocurrió un error inesperado.", details = ex.ToString() });
+
             }
-        }
+    
+            }
 
         [HttpGet("buscar-usuario-dni/{dni}")]
+        [Authorize]
         public async Task<IActionResult> BuscarUsuarioDNI(string dni){
             try{
                 
@@ -160,6 +177,7 @@ namespace FondoUnicoAPI.Controllers
         }   
 
         [HttpGet("buscar-usuarios/{rol}/{unidad}")]
+        [Authorize]
         public async Task<IActionResult> BuscarUsuarios(string rol, string unidad )
         {
             try
@@ -189,14 +207,18 @@ namespace FondoUnicoAPI.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
-            var urlPoliciaDigital = Environment.GetEnvironmentVariable("POLICIA_DIGITAL_URL");
-            var secretKey = Environment.GetEnvironmentVariable("SECRET_TOKEN_KEY");
+//            var urlPoliciaDigital = Environment.GetEnvironmentVariable("POLICIA_DIGITAL_URL");
 
-            if(urlPoliciaDigital == null)
+            var urlPoliciaDigital = _configuration["POLICIA_DIGITAL_URL"];
+            var secretKey = _configuration["SECRET_TOKEN_KEY"];
+
+
+            if(secretKey == null)
             {
-                return StatusCode(500, "Error interno del servidor");
+                return StatusCode(500, secretKey);
             }
 
+            //return Ok(secretKey);
             try
             {
 
@@ -205,6 +227,7 @@ namespace FondoUnicoAPI.Controllers
                     usuario = request.Usuario,
                     clave = request.Clave
                 };
+
 
                 var jsonContent = new StringContent(
                     JsonSerializer.Serialize(requestBody),
@@ -230,11 +253,13 @@ namespace FondoUnicoAPI.Controllers
                 // Ahora buscalo en la base de datos
                 var usuario = await _context.Usuario.FirstOrDefaultAsync(u => u.Usuario_repo == idRepo.ToString());
 
+
+
                 if(usuario == null)
                 {
                     return NotFound(new { message = "Usuario no encontrado" });
                 }
-                    
+
                 // Si el usuario existe, generamos un token
                 var tokenHandler = new JwtSecurityTokenHandler();
                 var byteKey = Encoding.UTF8.GetBytes(secretKey);
@@ -247,7 +272,7 @@ namespace FondoUnicoAPI.Controllers
                         new Claim(ClaimTypes.NameIdentifier, usuario.Id.ToString())
                         //  new Claim(ClaimTypes.)
                     }),
-                
+
                     Expires = DateTime.UtcNow.AddHours(24),
                     SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(byteKey), SecurityAlgorithms.HmacSha256Signature)
                 };
@@ -269,16 +294,14 @@ namespace FondoUnicoAPI.Controllers
                 return Ok(new { usuario, tokenString });
 
 
-                //return Ok(tokenString);
+                //return Ok(tokenString
 
-
-            
 
             }
             catch(Exception ex)
             {
                 Console.WriteLine(ex);
-                return StatusCode(500, "Error interno del servidor");
+                return StatusCode(500, ex);
             }
         }
 

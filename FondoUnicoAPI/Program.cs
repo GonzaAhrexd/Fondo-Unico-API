@@ -29,7 +29,19 @@ namespace FondoUnicoAPI
             builder.Services.AddHttpClient();
 
             // Toma SECRET_TOKEN_KEY desde el .env
-            var secretKey = Environment.GetEnvironmentVariable("SECRET_TOKEN_KEY");
+            builder.Configuration
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddEnvironmentVariables();
+
+            // Obtener SECRET_TOKEN_KEY desde la configuración
+            var secretKey = builder.Configuration["SECRET_TOKEN_KEY"];
+
+            Console.WriteLine($"Valor de SECRET_TOKEN_KEY: {secretKey}");
+
+            if(string.IsNullOrEmpty(secretKey))
+            {
+                throw new InvalidOperationException("SECRET_TOKEN_KEY no está definido en las variables de entorno.");
+            }
 
             builder.Services.AddAuthorization();
             builder.Services.AddAuthentication("Bearer").AddJwtBearer(opt =>
@@ -62,6 +74,12 @@ namespace FondoUnicoAPI
                 });
             });
 
+            builder.Configuration
+    .SetBasePath(Directory.GetCurrentDirectory())
+    .AddEnvironmentVariables()  // Agrega variables de entorno
+    .AddIniFile(".env", optional: true, reloadOnChange: true);  // Esto solo si quieres usar un .env, si no, omítelo
+
+
             var app = builder.Build();
 
 
@@ -73,7 +91,7 @@ namespace FondoUnicoAPI
             }
 
             app.UseHttpsRedirection();
-
+            app.UseAuthentication();
             app.UseAuthorization();
 
 

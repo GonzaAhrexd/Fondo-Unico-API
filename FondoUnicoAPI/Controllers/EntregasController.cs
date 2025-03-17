@@ -52,6 +52,7 @@ namespace FondoUnicoAPI.Controllers
         [Authorize]
         public async Task<ActionResult<IEnumerable<Entregas>>> GetEntregasPorUnidadFecha(string unidad, DateTime fechaInicio, DateTime fechaFinal)
         {
+
             // Si Unidad es Listar Todo, no filtrar por Unidad
             if(unidad == "Listar todo")
             {
